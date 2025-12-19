@@ -1,13 +1,20 @@
+require('dotenv').config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const app = express();
+
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: process.env.FRONTEND_URL || '*',
+    credentials: true
+}));
 app.use(express.json());
 
+// MongoDB connection
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://20225164:hunganh1310@20225164.vaxqvdk.mongodb.net/?appName=20225164";
 mongoose
- .connect("mongodb+srv://20225164:hunganh1310@20225164.vaxqvdk.mongodb.net/?appName=20225164")
+ .connect(MONGODB_URI)
  .then(() => console.log("Connected to MongoDB"))
  .catch((err) => console.error("MongoDB Error:", err));
 // Create Schema
@@ -116,6 +123,7 @@ app.delete("/api/users/:id", async (req, res) => {
 
 
 // Start server
-app.listen(3001, () => {
- console.log("Server running on http://localhost:3001");
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, '0.0.0.0', () => {
+ console.log(`Server running on port ${PORT}`);
 });
